@@ -1,18 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "Resume Analyser",
-  "description": "Summarize information about resumes",
+  "name": "Pixel Perfect Figma",
+  "description": "Create Pixel Perfect designs from Figma with ease",
   "version": "1.0",
   "action": {
     "default_popup": "index.html",
-    "default_title": "Analyze"
+    "default_title": "Pixel Perfect Figma"
   },
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
     "128": "logo192.png"
   },
-  "short_name": "React App",
+  "short_name": "Pixel Perfect Figma",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",

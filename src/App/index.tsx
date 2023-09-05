@@ -1,4 +1,3 @@
-import React from 'react'
 import './index.css'
 
 export const App = () => {
@@ -9,7 +8,7 @@ export const App = () => {
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Hello hackathon2
+          Hello hackathonnn
         </a>
       </header>
     </div>
