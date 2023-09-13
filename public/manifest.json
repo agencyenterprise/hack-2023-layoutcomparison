@@ -1,21 +1,24 @@
 {
   "manifest_version": 3,
   "name": "Pixel Perfect Figma",
+  "short_name": "Pixel Perfect Figma",
   "description": "Create Pixel Perfect designs from Figma with ease",
   "version": "1.0",
-  "action": {
-    "default_popup": "index.html",
-    "default_title": "Pixel Perfect Figma"
-  },
+
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
     "128": "logo192.png"
   },
-  "short_name": "Pixel Perfect Figma",
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
-  "permissions": ["activeTab"]
+
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Pixel Perfect Figma"
+  },
+
+  "background": {
+    "service_worker": "background/index.js"
+  },
+
+  "permissions": ["activeTab", "scripting", "storage"]
 }
