@@ -1,18 +1,19 @@
-function screenshot() {
+function takeScreenshot() {
   const element = document.querySelector('body')
 
   html2canvas(element).then((canvas) => {
-    const canvasImage = canvas.toDataURL('image/png')
+    var screenshot = canvas.toDataURL('image/png')
 
-    chrome.storage.local.set({ image: canvasImage })
+    chrome.storage.local.set({ screenshot })
+    chrome.runtime.sendMessage('takeScreenshotFinished')
   })
 }
 
-chrome.runtime.onMessage.addListener((req, sender, res) => {
-  if (req.message === 'init') {
-    res({}) // prevent re-injecting
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message === 'init') {
+    sendResponse({}) // prevent re-injecting
 
-    screenshot()
+    takeScreenshot()
   }
 
   return true
