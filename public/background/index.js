@@ -27,48 +27,33 @@ try {
 
     chrome.storage.local.get('screenshot', (data) => {
       const imageData = data.screenshot
-      console.log(imageData)
-
-      const color = '#00ff00'
-      function changeBackgroundColor(backgroundColor) {
-        document.body.style.backgroundColor = backgroundColor
-        document.body.style.fontSize = '500%'
-      }
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: changeBackgroundColor,
-        args: [color],
-      })
 
       if (imageData) {
-        // chrome.scripting.executeScript({
-        //   target: { tabId: tab.id },
-        //   func: () => {
-        //     const img = document.createElement('img')
-        //     img.src = `${imageData}`
-        //     img.width = '500px'
-        //     document.body.appendChild(img)
-        //     // const imageOpacity = 50
-        //     // const imageData = data.screenshot
-        //     // const existingImage = document.getElementById('pixel-perfect-image')
-        //     // if (existingImage) {
-        //     //   existingImage.style.opacity = String(imageOpacity / 100)
-        //     // } else {
-        //     // const img = document.createElement('img')
-        //     // img.src = imageData
-        //     // img.id = 'pixel-perfect-image'
-        //     // img.style.width = '100%'
-        //     // img.style.position = 'absolute'
-        //     // img.style.top = '0'
-        //     // img.style.bottom = '0'
-        //     // img.style.left = '0'
-        //     // img.style.right = '0'
-        //     // img.style.pointerEvents = 'none'
-        //     // img.style.opacity = String(imageOpacity / 100)
-        //     // document.body.appendChild(img)
-        //     // }
-        //   },
-        // })
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          args: [imageData],
+          func: (imageData) => {
+            const imageOpacity = 50
+            const existingImage = document.getElementById('pixel-perfect-image')
+
+            if (existingImage) {
+              existingImage.style.opacity = String(imageOpacity / 100)
+            } else {
+              const img = document.createElement('img')
+              img.src = imageData
+              img.id = 'pixel-perfect-image'
+              img.style.width = '100%'
+              img.style.position = 'absolute'
+              img.style.top = 0
+              img.style.bottom = 0
+              img.style.left = 0
+              img.style.right = 0
+              img.style.pointerEvents = 'none'
+              img.style.opacity = String(imageOpacity / 100)
+              document.body.appendChild(img)
+            }
+          },
+        })
       }
     })
   }
