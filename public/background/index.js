@@ -1,9 +1,15 @@
 try {
-  async function takeScreenshot() {
+  async function getCurrentTab() {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
     const tab = tabs[0]
 
-    chrome.tabs.sendMessage(tab.id, 'init', (res) => {
+    return tab
+  }
+
+  async function takeScreenshot() {
+    const tab = await getCurrentTab()
+
+    chrome.tabs.sendMessage(tab.id, { message: 'init' }, (res) => {
       if (res) clearTimeout(timeout)
     })
 
@@ -12,18 +18,18 @@ try {
         files: ['background/html2canvas.js'],
         target: { tabId: tab.id },
       })
+
       chrome.scripting.executeScript({
         files: ['background/screenshot.js'],
         target: { tabId: tab.id },
       })
 
-      setTimeout(() => chrome.tabs.sendMessage(tab.id, 'init'), 100)
+      setTimeout(() => chrome.tabs.sendMessage(tab.id, { message: 'init' }), 100)
     }, 100)
   }
 
-  async function applyScreenshot() {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-    const tab = tabs[0]
+  async function applyScreenshot(imageOpacity = 50) {
+    const tab = await getCurrentTab()
 
     chrome.storage.local.get('screenshot', (data) => {
       const imageData = data.screenshot
@@ -31,9 +37,8 @@ try {
       if (imageData) {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
-          args: [imageData],
-          func: (imageData) => {
-            const imageOpacity = 50
+          args: [imageData, imageOpacity],
+          func: (imageData, imageOpacity) => {
             const existingImage = document.getElementById('pixel-perfect-image')
 
             if (existingImage) {
@@ -50,27 +55,33 @@ try {
               img.style.right = 0
               img.style.pointerEvents = 'none'
               img.style.opacity = String(imageOpacity / 100)
+              img.style.zIndex = 2147483647
               document.body.appendChild(img)
             }
           },
         })
+
+        chrome.runtime.sendMessage({ message: 'applyScreenshotFinished' })
       }
     })
   }
 
-  chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
-    console.log(message, sender, sendResponse)
+  chrome.runtime.onMessage.addListener(async function (data, sender, sendResponse) {
+    console.log(data, sender, sendResponse)
 
-    switch (message) {
+    switch (data.message) {
       case 'takeScreenshot':
-        chrome.runtime.sendMessage('takeScreenshotStarted')
+        chrome.runtime.sendMessage({ message: 'takeScreenshotStarted' })
 
         await takeScreenshot()
         break
       case 'applyScreenshot':
-        chrome.runtime.sendMessage('applyScreenshotStarted')
+        chrome.runtime.sendMessage({ message: 'applyScreenshotStarted' })
 
-        await applyScreenshot()
+        await applyScreenshot(data.imageOpacity)
+        break
+      case 'applyOpacity':
+        await applyScreenshot(data.imageOpacity)
         break
       default:
         break

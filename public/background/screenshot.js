@@ -5,12 +5,15 @@ function takeScreenshot() {
     var screenshot = canvas.toDataURL('image/png')
 
     chrome.storage.local.set({ screenshot })
-    chrome.runtime.sendMessage('takeScreenshotFinished')
+
+    setTimeout(() => {
+      chrome.runtime.sendMessage({ message: 'takeScreenshotFinished', screenshot })
+    }, 5000)
   })
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message === 'init') {
+chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
+  if (data.message === 'init') {
     sendResponse({}) // prevent re-injecting
 
     takeScreenshot()

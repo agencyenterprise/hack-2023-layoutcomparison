@@ -1,42 +1,99 @@
 import { useState, useEffect } from 'react'
 import { CameraIcon, PhotoIcon } from '@heroicons/react/24/outline'
+import { twMerge } from 'tailwind-merge'
+import { clsx } from 'clsx'
+import screenshot1 from '../assets/screenshot1.jpeg'
+import screenshot2 from '../assets/screenshot2.jpeg'
+import screenshot3 from '../assets/screenshot3.jpeg'
+import screenshot4 from '../assets/screenshot4.jpeg'
+
+type Message = {
+  text: string
+  color: string
+  image: string
+}
+
+const defaultMessage: Message = {
+  text: '',
+  color: '',
+  image: '',
+}
 
 export const App = () => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<Message | null>(defaultMessage)
   const [imageData, setImageData] = useState('')
-  const [imageOpacity, setImageOpacity] = useState(100)
-
-  function applyScreenshot() {
-    chrome.runtime.sendMessage('applyScreenshot')
-  }
+  const [imageOpacity, setImageOpacity] = useState(50)
 
   function takeScreenshot() {
-    chrome.runtime.sendMessage('takeScreenshot')
+    chrome.runtime.sendMessage({ message: 'takeScreenshot' })
+    setImageOpacity(50)
+    chrome.storage.local.set({ opacity: 50 })
+  }
+
+  function applyScreenshot(opacity: number = imageOpacity) {
+    chrome.runtime.sendMessage({ message: 'applyScreenshot', imageOpacity: opacity })
+  }
+
+  function applyOpacity(opacity: number = imageOpacity) {
+    chrome.runtime.sendMessage({ message: 'applyOpacity', imageOpacity: opacity })
+  }
+
+  function getScreenshot() {
+    chrome.storage.local.get('screenshot', (data: any) => {
+      if (data.screenshot) {
+        setImageData(data.screenshot)
+      }
+    })
+  }
+
+  function getOpacity() {
+    chrome.storage.local.get('opacity', (data: any) => {
+      if (data.opacity) {
+        setImageOpacity(data.opacity)
+      }
+    })
   }
 
   useEffect(() => {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      switch (message) {
+    getScreenshot()
+    getOpacity()
+  }, [])
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener((data: any) => {
+      switch (data.message) {
         case 'takeScreenshotStarted':
-          setMessage('Taking Screenshot...')
+          setMessage({
+            text: 'Taking Screenshot...',
+            color: 'orange',
+            image: screenshot1,
+          })
+          setImageData('')
 
           break
         case 'takeScreenshotFinished':
-          setMessage('Screenshot Taken')
-
-          chrome.storage.local.get('screenshot', (data) => {
-            if (data.screenshot) {
-              setImageData(data.screenshot)
-            }
+          setMessage({
+            text: 'Screenshot Taken!',
+            color: 'green',
+            image: screenshot2,
           })
+          setImageData(data.screenshot)
 
           break
         case 'applyScreenshotStarted':
-          setMessage('Applying Screenshot...')
+          setMessage({
+            text: 'Applying Screenshot...',
+            color: 'orange',
+            image: screenshot3,
+          })
 
           break
         case 'applyScreenshotFinished':
-          setMessage('Screenshot Applied')
+          setMessage({
+            text: 'Screenshot Applied!',
+            color: 'green',
+            image: screenshot4,
+          })
 
           break
         default:
@@ -47,7 +104,7 @@ export const App = () => {
 
   useEffect(() => {
     if (!!message) {
-      setTimeout(() => setMessage(''), 10 * 1000)
+      setTimeout(() => setMessage(defaultMessage), 10 * 1000)
     }
   }, [message])
 
@@ -65,40 +122,53 @@ export const App = () => {
 
         <div className="flex items-center justify-center gap-2">
           <button
-            className="flex items-center gap-2 bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded-md"
+            className="flex items-center gap-2 bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded-md disabled:opacity-25 disabled:cursor-not-allowed"
             onClick={takeScreenshot}
+            disabled={!!message?.text}
           >
             Take Screenshot <CameraIcon className="h-6 w-6" />
           </button>
 
-          {imageData && (
-            <button
-              className="flex items-center gap-2 bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded-md"
-              onClick={applyScreenshot}
-            >
-              Apply Screenshot <PhotoIcon className="h-6 w-6" />
-            </button>
-          )}
+          <button
+            className="flex items-center gap-2 bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded-md disabled:opacity-25 disabled:cursor-not-allowed"
+            onClick={() => applyScreenshot()}
+            disabled={!!message?.text}
+          >
+            Apply Screenshot <PhotoIcon className="h-6 w-6" />
+          </button>
         </div>
 
-        {message && (
+        {message?.text && (
           <div
-            className="my-2 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
+            className={twMerge(
+              clsx(
+                `my-4 border-t-4  rounded-b  p-4 shadow-md rounded-lg`,
+                message.color === 'orange' && 'bg-orange-100 border-orange-500 text-orange-900',
+                message.color === 'green' && 'bg-green-100 border-green-500 text-green-900',
+              ),
+            )}
             role="alert"
           >
-            <strong className="font-bold">{message}</strong>
-            {/* <span className="block sm:inline">Something seriously bad happened.</span> */}
-            <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setMessage('')}>
-              <svg
-                className="fill-current h-6 w-6 text-blue-500"
-                role="button"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <title>Close</title>
-                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-              </svg>
-            </span>
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-between mb-4">
+                <svg
+                  className={twMerge(
+                    clsx(
+                      `fill-current h-6 w-6 mr-4`,
+                      message.color === 'orange' && 'text-orange-500',
+                      message.color === 'green' && 'text-green-500',
+                    ),
+                  )}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                </svg>
+                <p className="font-bold">{message.text}</p>
+                <div />
+              </div>
+              <img alt="funny" className="w-96 border shadow-lg" src={message.image} />
+            </div>
           </div>
         )}
 
@@ -112,14 +182,21 @@ export const App = () => {
                 id="opacity-slider"
                 type="range"
                 value={imageOpacity}
-                onChange={(e) => setImageOpacity(Number(e.target.value))}
+                step={5}
+                onChange={(e) => {
+                  const imageOpacity = Number(e.target.value)
+
+                  setImageOpacity(imageOpacity)
+                  applyOpacity(imageOpacity)
+                  chrome.storage.local.set({ opacity: imageOpacity })
+                }}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
             </div>
 
             <div className="flex flex-col items-center justify-center">
-              <p className="text-center text-gray-700 text-sm">Screenshot Preview:</p>
-              <img alt="alt" className="w-96" src={imageData} />
+              <p className="text-center text-gray-700 text-sm mb-2">Screenshot Preview:</p>
+              <img alt="screenshot preview" className="w-96 border shadow-lg" src={imageData} />
             </div>
           </>
         )}
