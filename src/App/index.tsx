@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { CameraIcon, PhotoIcon } from '@heroicons/react/24/outline'
+import { CameraIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { clsx } from 'clsx'
 import screenshot1 from '../assets/screenshot1.jpeg'
 import screenshot2 from '../assets/screenshot2.jpeg'
 import screenshot3 from '../assets/screenshot3.jpeg'
 import screenshot4 from '../assets/screenshot4.jpeg'
+import screenshot5 from '../assets/screenshot5.png'
 
 type Message = {
   text: string
@@ -54,6 +55,27 @@ export const App = () => {
     })
   }
 
+  function clear() {
+    setMessage({
+      text: 'Cleaning Screenshot...',
+      color: 'red',
+      image: screenshot5,
+    })
+
+    setTimeout(() => {
+      setImageData('')
+      setImageOpacity(50)
+      chrome.storage.local.clear()
+      setMessage(defaultMessage)
+    }, 5000)
+  }
+
+  function clearMessageinSeconds(seconds = 5) {
+    setTimeout(() => {
+      setMessage(defaultMessage)
+    }, seconds * 1000)
+  }
+
   useEffect(() => {
     getScreenshot()
     getOpacity()
@@ -78,6 +100,7 @@ export const App = () => {
             image: screenshot2,
           })
           setImageData(data.screenshot)
+          clearMessageinSeconds()
 
           break
         case 'applyScreenshotStarted':
@@ -94,6 +117,7 @@ export const App = () => {
             color: 'green',
             image: screenshot4,
           })
+          clearMessageinSeconds()
 
           break
         default:
@@ -102,23 +126,10 @@ export const App = () => {
     })
   }, [])
 
-  useEffect(() => {
-    if (!!message) {
-      setTimeout(() => setMessage(defaultMessage), 10 * 1000)
-    }
-  }, [message])
-
   return (
     <div className="p-4 shadow-lg rounded-lg w-[400px]">
       <header className="App-header">
-        <h1 className="text-2xl font-bold text-center text-blue-500 mb-4">
-          Pixel Perfect
-          <span className="ml-2 text-[#F24E1E]">F</span>
-          <span className="text-[#FF7262]">I</span>
-          <span className="text-[#A259FF]">G</span>
-          <span className="text-[#1ABCFE]">M</span>
-          <span className="mr-2 text-[#0ACF83]">A</span>
-        </h1>
+        <h1 className="text-2xl font-bold text-center text-blue-500 mb-4">Cool Title Here</h1>
 
         <div className="flex items-center justify-center gap-2">
           <button
@@ -132,7 +143,7 @@ export const App = () => {
           <button
             className="flex items-center gap-2 bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded-md disabled:opacity-25 disabled:cursor-not-allowed"
             onClick={() => applyScreenshot()}
-            disabled={!!message?.text}
+            disabled={!imageData || !!message?.text}
           >
             Apply Screenshot <PhotoIcon className="h-6 w-6" />
           </button>
@@ -145,6 +156,7 @@ export const App = () => {
                 `my-4 border-t-4  rounded-b  p-4 shadow-md rounded-lg`,
                 message.color === 'orange' && 'bg-orange-100 border-orange-500 text-orange-900',
                 message.color === 'green' && 'bg-green-100 border-green-500 text-green-900',
+                message.color === 'red' && 'bg-red-100 border-red-500 text-red-900',
               ),
             )}
             role="alert"
@@ -157,6 +169,7 @@ export const App = () => {
                       `fill-current h-6 w-6 mr-4`,
                       message.color === 'orange' && 'text-orange-500',
                       message.color === 'green' && 'text-green-500',
+                      message.color === 'red' && 'text-red-500',
                     ),
                   )}
                   xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +207,11 @@ export const App = () => {
               />
             </div>
 
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center relative">
+              <XMarkIcon
+                className="h-5 w-5 text-red-300 absolute top-9 right-2 hover:text-red-500 cursor-pointer"
+                onClick={clear}
+              />
               <p className="text-center text-gray-700 text-sm mb-2">Screenshot Preview:</p>
               <img alt="screenshot preview" className="w-96 border shadow-lg" src={imageData} />
             </div>

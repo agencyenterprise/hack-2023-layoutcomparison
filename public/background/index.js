@@ -60,8 +60,6 @@ try {
             }
           },
         })
-
-        chrome.runtime.sendMessage({ message: 'applyScreenshotFinished' })
       }
     })
   }
@@ -78,7 +76,12 @@ try {
       case 'applyScreenshot':
         chrome.runtime.sendMessage({ message: 'applyScreenshotStarted' })
 
-        await applyScreenshot(data.imageOpacity)
+        setTimeout(async () => {
+          await applyScreenshot(data.imageOpacity)
+
+          chrome.runtime.sendMessage({ message: 'applyScreenshotFinished' })
+        }, 5000)
+
         break
       case 'applyOpacity':
         await applyScreenshot(data.imageOpacity)
