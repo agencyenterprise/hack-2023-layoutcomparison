@@ -1,7 +1,6 @@
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   color: #495057;
   font-size: 16px;
   line-height: 160%;
@@ -488,13 +487,7 @@ a {
 }
 
 .bg-gradient {
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(25%, #fff),
-    to(hsla(0, 0%, 100%, 0))
-  );
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(25%, #fff), to(hsla(0, 0%, 100%, 0)));
   background-image: linear-gradient(180deg, #fff 25%, hsla(0, 0%, 100%, 0));
 }
 
@@ -580,13 +573,7 @@ a {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(#fff),
-    to(hsla(0, 0%, 100%, 0))
-  );
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(hsla(0, 0%, 100%, 0)));
   background-image: linear-gradient(180deg, #fff, hsla(0, 0%, 100%, 0));
 }
 
@@ -895,4 +882,17 @@ a {
   .test-giga.text-center {
     font-size: 38px;
   }
+}
+
+.ae-studio-container {
+  z-index: 5;
+  padding-bottom: 2rem;
+}
+
+.ae-studio {
+  cursor: pointer;
+}
+
+.ae-studio:hover {
+  text-decoration: underline;
 }
