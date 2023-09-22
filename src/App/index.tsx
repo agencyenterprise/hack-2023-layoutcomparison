@@ -129,9 +129,12 @@ export const App = () => {
   return (
     <div className="p-4 shadow-lg rounded-lg w-[400px]">
       <header className="App-header">
-        <h1 className="text-2xl font-bold text-center text-blue-500 mb-4">Cool Title Here</h1>
+        <h1 className="font-extrabold text-5xl text-center mb-4">
+          📸
+          <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Pic & Go</span>
+        </h1>
 
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 my-8">
           <button
             className="flex items-center gap-2 bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded-md disabled:opacity-25 disabled:cursor-not-allowed"
             onClick={takeScreenshot}
@@ -189,7 +192,7 @@ export const App = () => {
           <>
             <div className="my-4">
               <label htmlFor="opacity-slider" className="block text-sm font-medium text-gray-900">
-                Screenshot Opacity: {imageOpacity}%
+                Opacity: {imageOpacity}%
               </label>
               <input
                 id="opacity-slider"
@@ -212,7 +215,7 @@ export const App = () => {
                 className="h-5 w-5 text-red-300 absolute top-9 right-2 hover:text-red-500 cursor-pointer"
                 onClick={clear}
               />
-              <p className="text-center text-gray-700 text-sm mb-2">Screenshot Preview:</p>
+              <p className="text-center text-gray-700 text-sm mb-2">Preview:</p>
               <img alt="screenshot preview" className="w-96 border shadow-lg" src={imageData} />
             </div>
           </>

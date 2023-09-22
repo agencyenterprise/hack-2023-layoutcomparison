@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Pixel Perfect Figma",
-  "short_name": "Pixel Perfect Figma",
-  "description": "Create Pixel Perfect designs from Figma with ease",
+  "name": "Pic & Go",
+  "short_name": "Pic & Go",
+  "description": "Create Pixel Perfect designs with ease",
   "version": "1.0",
 
   "icons": {
@@ -13,7 +13,7 @@
 
   "action": {
     "default_popup": "index.html",
-    "default_title": "Pixel Perfect Figma"
+    "default_title": "Pic & Go"
   },
 
   "background": {
