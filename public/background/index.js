@@ -64,6 +64,21 @@ try {
     })
   }
 
+  async function clearScreenshot() {
+    const tab = await getCurrentTab()
+
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        const existingImage = document.getElementById('pixel-perfect-image')
+
+        if (existingImage) {
+          existingImage.remove()
+        }
+      },
+    })
+  }
+
   chrome.runtime.onMessage.addListener(async function (data, sender, sendResponse) {
     console.log(data, sender, sendResponse)
 
@@ -80,11 +95,14 @@ try {
           await applyScreenshot(data.imageOpacity)
 
           chrome.runtime.sendMessage({ message: 'applyScreenshotFinished' })
-        }, 5000)
+        }, 3000)
 
         break
       case 'applyOpacity':
         await applyScreenshot(data.imageOpacity)
+        break
+      case 'clearScreenshot':
+        await clearScreenshot()
         break
       default:
         break

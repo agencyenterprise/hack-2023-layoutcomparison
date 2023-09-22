@@ -8,7 +8,7 @@ function takeScreenshot() {
 
     setTimeout(() => {
       chrome.runtime.sendMessage({ message: 'takeScreenshotFinished', screenshot })
-    }, 5000)
+    }, 3000)
   })
 }
 

@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react'
-import { CameraIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  CameraIcon,
+  PhotoIcon,
+  XMarkIcon,
+  ArrowsPointingInIcon,
+  ArrowsPointingOutIcon,
+} from '@heroicons/react/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { clsx } from 'clsx'
 import screenshot1 from '../assets/screenshot1.jpeg'
@@ -7,6 +13,8 @@ import screenshot2 from '../assets/screenshot2.jpeg'
 import screenshot3 from '../assets/screenshot3.jpeg'
 import screenshot4 from '../assets/screenshot4.jpeg'
 import screenshot5 from '../assets/screenshot5.png'
+
+type ViewMode = 'full' | 'min'
 
 type Message = {
   text: string
@@ -21,6 +29,7 @@ const defaultMessage: Message = {
 }
 
 export const App = () => {
+  const [viewMode, setViewMode] = useState<ViewMode>('full')
   const [message, setMessage] = useState<Message | null>(defaultMessage)
   const [imageData, setImageData] = useState('')
   const [imageOpacity, setImageOpacity] = useState(50)
@@ -55,7 +64,7 @@ export const App = () => {
     })
   }
 
-  function clear() {
+  function clearScreenshot() {
     setMessage({
       text: 'Cleaning Screenshot...',
       color: 'red',
@@ -67,7 +76,8 @@ export const App = () => {
       setImageOpacity(50)
       chrome.storage.local.clear()
       setMessage(defaultMessage)
-    }, 5000)
+      chrome.runtime.sendMessage({ message: 'clearScreenshot' })
+    }, 3000)
   }
 
   function clearMessageinSeconds(seconds = 5) {
@@ -126,13 +136,29 @@ export const App = () => {
     })
   }, [])
 
+  if (viewMode === 'min') {
+    return (
+      <div className="p-2 shadow-lg rounded-lg w-[400px]">
+        <ViewModeIcons imageData={imageData} viewMode={viewMode} setViewMode={setViewMode} />
+
+        <Title className="text-xl mb-0" />
+
+        <OpacitySlider
+          className="mt-0"
+          imageOpacity={imageOpacity}
+          setImageOpacity={setImageOpacity}
+          applyOpacity={applyOpacity}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="p-4 shadow-lg rounded-lg w-[400px]">
-      <header className="App-header">
-        <h1 className="font-extrabold text-5xl text-center mb-4">
-          📸
-          <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Pic & Go</span>
-        </h1>
+      <ViewModeIcons imageData={imageData} viewMode={viewMode} setViewMode={setViewMode} />
+
+      <div>
+        <Title />
 
         <div className="flex items-center justify-center gap-2 my-8">
           <button
@@ -190,37 +216,93 @@ export const App = () => {
 
         {imageData && (
           <>
-            <div className="my-4">
-              <label htmlFor="opacity-slider" className="block text-sm font-medium text-gray-900">
-                Opacity: {imageOpacity}%
-              </label>
-              <input
-                id="opacity-slider"
-                type="range"
-                value={imageOpacity}
-                step={5}
-                onChange={(e) => {
-                  const imageOpacity = Number(e.target.value)
-
-                  setImageOpacity(imageOpacity)
-                  applyOpacity(imageOpacity)
-                  chrome.storage.local.set({ opacity: imageOpacity })
-                }}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
+            <OpacitySlider imageOpacity={imageOpacity} setImageOpacity={setImageOpacity} applyOpacity={applyOpacity} />
 
             <div className="flex flex-col items-center justify-center relative">
               <XMarkIcon
                 className="h-5 w-5 text-red-300 absolute top-9 right-2 hover:text-red-500 cursor-pointer"
-                onClick={clear}
+                onClick={clearScreenshot}
               />
               <p className="text-center text-gray-700 text-sm mb-2">Preview:</p>
               <img alt="screenshot preview" className="w-96 border shadow-lg" src={imageData} />
             </div>
           </>
         )}
-      </header>
+      </div>
+    </div>
+  )
+}
+
+interface TitleProps {
+  className?: string
+}
+
+const Title = ({ className = '' }: TitleProps) => (
+  <h1 className={twMerge('font-extrabold text-5xl text-center mb-4', className)}>
+    📸 <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Pic & Go</span>
+  </h1>
+)
+
+interface ViewModeProps {
+  imageData: string
+  viewMode: ViewMode
+  setViewMode: React.Dispatch<React.SetStateAction<ViewMode>>
+}
+
+const ViewModeIcons = (props: ViewModeProps) => {
+  const { imageData, viewMode, setViewMode } = props
+
+  return (
+    imageData && (
+      <div
+        className="absolute top-4 right-4"
+        onClick={() => setViewMode((oldMode) => (oldMode === 'full' ? 'min' : 'full'))}
+      >
+        {viewMode === 'full' ? (
+          <ArrowsPointingInIcon
+            title="Enter minimum view mode"
+            className="text-gray-300 hover:text-gray-900 cursor-pointer w-4 h-4"
+          />
+        ) : (
+          <ArrowsPointingOutIcon
+            title="Enter full view mode"
+            className="text-gray-300 hover:text-gray-900 cursor-pointer w-4 h-4"
+          />
+        )}
+      </div>
+    )
+  )
+}
+
+interface OpacitySliderProps {
+  className?: string
+  imageOpacity: number
+  setImageOpacity: (opacity: number) => void
+  applyOpacity: (opacity: number) => void
+}
+
+const OpacitySlider = (props: OpacitySliderProps) => {
+  const { className = '', imageOpacity, setImageOpacity, applyOpacity } = props
+
+  return (
+    <div className={twMerge('my-4', className)}>
+      <label htmlFor="opacity-slider" className="block text-sm font-medium text-gray-900">
+        Opacity: {imageOpacity}%
+      </label>
+      <input
+        id="opacity-slider"
+        type="range"
+        value={imageOpacity}
+        step={5}
+        onChange={(e) => {
+          const imageOpacity = Number(e.target.value)
+
+          setImageOpacity(imageOpacity)
+          applyOpacity(imageOpacity)
+          chrome.storage.local.set({ opacity: imageOpacity })
+        }}
+        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+      />
     </div>
   )
 }
