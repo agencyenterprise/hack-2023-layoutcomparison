@@ -3,35 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-
-    <style>
-      .square {
-        width: 300px;
-        height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-      }
-
-      .red {
-        position: absolute;
-        top: 200px;
-        left: 100px;
-        background: red;
-      }
-
-      .blue {
-        position: absolute;
-        top: 500px;
-        left: 700px;
-        background: blue;
-      }
-    </style>
+    <title>Dev page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
-    <div class="square red">RED SQUARE</div>
-    <div class="square blue">BLUE SQUARE</div>
+    <div class="container mx-auto p-32 pt-96">
+      <div class="flex justify-between p-8 border">
+        <div class="w-48 h-48 bg-pink-500"></div>
+        <div class="w-48 h-48 bg-green-500"></div>
+        <div class="w-48 h-48 bg-blue-500"></div>
+      </div>
+    </div>
   </body>
 </html>
