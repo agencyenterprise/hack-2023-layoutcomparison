@@ -239,7 +239,7 @@ interface TitleProps {
 
 const Title = ({ className = '' }: TitleProps) => (
   <h1 className={twMerge('font-extrabold text-5xl text-center mb-4', className)}>
-    📸 <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Pic & Go</span>
+    📸 <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Layout Comparison</span>
   </h1>
 )
 
