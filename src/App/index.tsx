@@ -238,8 +238,8 @@ interface TitleProps {
 }
 
 const Title = ({ className = '' }: TitleProps) => (
-  <h1 className={twMerge('font-extrabold text-5xl text-center mb-4', className)}>
-    📸 <span className="text-transparent  bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Layout Comparison</span>
+  <h1 className={twMerge('font-extrabold text-3xl text-center mb-4', className)}>
+    📸 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-red-700">Layout Comparison</span>
   </h1>
 )
 
@@ -255,7 +255,7 @@ const ViewModeIcons = (props: ViewModeProps) => {
   return (
     imageData && (
       <div
-        className="absolute top-4 right-4"
+        className="absolute top-3 right-3"
         onClick={() => setViewMode((oldMode) => (oldMode === 'full' ? 'min' : 'full'))}
       >
         {viewMode === 'full' ? (
