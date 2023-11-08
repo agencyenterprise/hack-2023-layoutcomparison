@@ -1,13 +1,16 @@
 try {
   async function getCurrentTab() {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-    const tab = tabs[0]
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
     return tab
   }
 
   async function takeScreenshot() {
     const tab = await getCurrentTab()
+
+    if (!tab) {
+      return
+    }
 
     chrome.tabs.sendMessage(tab.id, { message: 'init' }, (res) => {
       if (res) clearTimeout(timeout)

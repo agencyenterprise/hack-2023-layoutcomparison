@@ -37,7 +37,9 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
+    "sds-projects": "^0.2.5",
     "tailwind-merge": "^1.14.0",
     "typescript": "^5.2.2"
   },
