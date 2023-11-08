@@ -7,12 +7,12 @@ export const LandingPage = () => {
       <section className="mt-8 px-6">
         <div className="py-6 mx-auto lg:py-12">
           <Title className="text-2xl md:text-5xl mb-3" />
-          <p className="text-lg lg:text-xl sm:px-16 lg:px-48">Your Ultimate Chrome Extension for Layout Comparison!</p>
+          <p className="text-lg lg:text-xl sm:px-16 lg:px-48">Your ultimate Chrome extension for layout comparison!</p>
         </div>
       </section>
       <section className="bg-purple-50 py-6 lg:py-12 px-6 space-y-4 flex flex-col items-center">
         <h2 className="font-semibold text-xl sm:text-2xl text-purple-950">
-          Try Layout Comparison Today: Available for FREE on the Chrome Web Store!
+          Try Layout Comparison today: available for FREE on the Chrome web store!
         </h2>
         <a
           href="https://chrome.google.com/webstore"
