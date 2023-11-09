@@ -1,10 +1,27 @@
 import { BuildingOfficeIcon, CurrencyDollarIcon, HomeIcon } from '@heroicons/react/24/outline'
+import * as Sentry from '@sentry/react'
 import '@typeform/embed/build/css/popup.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { SdsNavbar, WhoMadeThisPage } from 'sds-projects'
 import { ExtensionPage } from './ExtensionPage'
 import { LandingPage } from './LandingPage'
 import { PricingPage } from './PricingPage'
+
+Sentry.init({
+  dsn: 'https://beb1960ebe187c27613b37b4a4249ade@o323538.ingest.sentry.io/4506196190887936',
+  integrations: [
+    new Sentry.BrowserTracing({
+      // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+      tracePropagationTargets: ['localhost', /^https:\/\/layoutcomparison\.com/],
+    }),
+    new Sentry.Replay(),
+  ],
+  // Performance Monitoring
+  tracesSampleRate: 1.0, // Capture 100% of the transactions
+  // Session Replay
+  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+})
 
 const navigation = [
   { name: 'Home', page: '/', icon: HomeIcon },
