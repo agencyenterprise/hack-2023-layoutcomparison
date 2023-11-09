@@ -1,5 +1,3 @@
-const html2canvas = require('html2canvas')
-
 function takeScreenshot() {
   const element = document.querySelector('body')
 
