@@ -63,7 +63,9 @@ export const App = () => {
 
   return (
     <SdsNavbar projectName="Layout Comparison" customTheme={navbarTheme} navigation={navigation} hideUserMenu>
-      <RouterProvider router={router} />
+      <main className="w-full h-[calc(100vh_-_64px)] overflow-auto">
+        <RouterProvider router={router} />
+      </main>
     </SdsNavbar>
   )
 }

@@ -24,33 +24,34 @@ export const LandingPage = () => {
         </a>
       </section>
       <section className="px-6 max-w-3xl m-auto space-y-8 sm:space-y-12">
-        <div className="flex gap-4 justify-between">
-          <img alt="" src="/images/feature1.jpg" className="w-36 h-36 sm:w-52 sm:h-52 rounded-xl" />
+        <h3 className="text-2xl sm:text-3xl font-semibold text-purple-900">How it works?</h3>
+        <div className="flex gap-4 items-center justify-between">
+          <img
+            className="border-2 border-purple-700 h-36 sm:h-44 rounded-xl"
+            src="/images/extension.png"
+            alt="Layout Comparison extension"
+          />
           <div className="text-right">
-            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">Tired of pixel-perfect web design?</h3>
-            <p>Take your projects to the next level with Layout Comparison.</p>
-
-            <h3 className="text-lg sm:text-xl font-semibold text-purple-900 mt-4">Capture Screenshots:</h3>
-            <p>Easily snap screenshots of web pages with a click.</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">
+              1. Launch the extension and capture a screenshot
+            </h3>
+            <p>Retrieve designs from your preferred platforms such as Figma, Miro, and others.</p>
           </div>
         </div>
-
-        <div className="flex gap-4 justify-between">
+        <div className="flex gap-4 items-center justify-between">
           <div className="text-left">
-            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">Compare Layouts:</h3>
-            <p>Seamlessly compare multiple screenshots to spot even the tiniest design variations.</p>
-
-            <h3 className="text-lg sm:text-xl font-semibold text-purple-900 mt-4">Boost Efficiency:</h3>
-            <p>Streamline your design workflow, collaborate with your team, and deliver pixel-perfect results.</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">
+              2. Return to your application and adjust the opacity
+            </h3>
+            <p>Examine the overlay that has been applied and identify areas that need adjustment.</p>
           </div>
-          <img alt="" src="/images/feature2.jpg" className="w-36 h-36 sm:w-52 sm:h-52 rounded-xl" />
+          <img alt="" src="/images/opacity.png" className="border-2 border-purple-700 h-60 sm:h-80 rounded-xl" />
         </div>
-
         <div className="flex gap-4 justify-between">
-          <img alt="" src="/images/feature3.jpg" className="w-36 h-36 sm:w-52 sm:h-52 rounded-xl" />
+          <img alt="" src="/images/apply.png" className="border-2 border-purple-700 h-60 sm:h-80 rounded-xl" />
           <div className="text-right">
-            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">For Designers, Developers, and Beyond:</h3>
-            <p>Perfect for web designers, developers, and anyone seeking pixel-precision in web layouts.</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-purple-900">3. Apply the screenshot</h3>
+            <p>Save the adjusted opacity on the current page for future reference.</p>
           </div>
         </div>
       </section>
