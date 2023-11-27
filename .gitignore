@@ -26,3 +26,6 @@ build.zip
 
 # Sentry Config File
 .sentryclirc
+
+.replit
+replit.nix
